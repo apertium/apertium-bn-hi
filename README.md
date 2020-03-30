@@ -21,3 +21,4 @@ Files and data
 * apertium-bn-hi.hi-bn.t3x         - Post Chunk rules for translating into Bengali
 * apertium-bn-hi.bn-hi.rlx         - Constraint Grammar for Bengali
 * apertium-bn-hi.hi-bn.rlx         - Constraint Grammar for Hindi
+* bengali_dataset_sentiment_analysis  - Sentiment Analysis for Bengali Words
