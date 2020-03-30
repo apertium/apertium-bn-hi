@@ -19,5 +19,5 @@ Files and data
 * apertium-bn-hi.hi-bn.t1x         - Intrachunk for translating into Bengali
 * apertium-bn-hi.hi-bn.t2x         - Interchunk for translating into  Bengali
 * apertium-bn-hi.hi-bn.t3x         - Post Chunk rules for translating into Bengali
-*apertium-bn-hi.bn-hi.rlx          - Constraint Grammar for Bengali
-*apertium-bn-hi.hi-bn.rlx          - Constraint Grammar for Hindi
+* apertium-bn-hi.bn-hi.rlx         - Constraint Grammar for Bengali
+* apertium-bn-hi.hi-bn.rlx         - Constraint Grammar for Hindi
