@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<transfer default="chunk">
+  <section-def-cats>
+    <def-cat n="nom">
+      <cat-item tags="n.*"/>
+    </def-cat>
+    <def-cat n="prop_nom">
+      <cat-item tags="np"/>
+    </def-cat>
+	<def-cat n="adverb">
+		<cat-item tags="adv.*"/>
+	</def-cat>
+    <def-cat n="sent">
+      <cat-item tags="sent"/>
+    </def-cat>
+  </section-def-cats>
+
+  <section-def-attrs>
+    <def-attr n="a_cas">
+      <attr-item tags="nom"/>
+    </def-attr>
+	<def-attr n="atri_nom">
+      <attr-item tags="nom"/>
+	  <attr-item tags="obj"/>
+	  <attr-item tags="gen"/>
+	  <attr-item tags="loc"/>
+	</def-attr>
+	<def-attr n="atri_comm">
+       <attr-item tags ="al"/>
+       <attr-item tags ="top"/>
+       <attr-item tags ="ant"/>
+       <attr-item tags ="cog"/>
+       <attr-item tags= "org"/>
+    </def-attr>
+	 <def-attr n="noun">
+      <attr-item tags="n"/>
+      <attr-item tags="np"/>
+    </def-attr>
+
+    <def-attr n="gen">
+      <attr-item tags="m"/>
+      <attr-item tags="f"/>
+      <attr-item tags="GD"/>
+    </def-attr>
+    <def-attr n="number">
+      <attr-item tags="sg"/>
+      <attr-item tags="pl"/>
+      <attr-item tags="sp"/>
+    </def-attr>
+    <def-attr n="adverb_attr">
+      <attr-item tags="adv"/>
+      <attr-item tags="itg"/>
+    </def-attr>
+</section-def-attrs>
+
+  <section-def-vars>
+    <def-var n="numbers"/>
+  </section-def-vars>
+
+  <section-def-macros>
+    <def-macro n="test" npar="1">
+          <let>
+            <var n="number"/>
+            <lit v=""/>
+          </let>
+    </def-macro>
+
+    <def-macro n="f_concord2" npar="2">
+      <choose>
+        <when>
+          <test><not><equal><clip pos="1" side="tl" part="gen"/><lit v=""/></equal></not></test>
+          <let><clip pos="2" side="tl" part="gen"/><clip pos="1" side="tl" part="gen"/></let>
+        </when>
+      </choose>
+    </def-macro>
+  </section-def-macros>
+
+  <section-rules>
+   <rule comment="REGLA: SENT">
+      <pattern>
+        <pattern-item n="sent"/>
+      </pattern>
+      <action>
+        <out>
+          <chunk name="sent" case="caseFirstWord">
+            <tags>
+              <tag><lit-tag v="SENT"/></tag>
+            </tags>
+            <lu>
+              <clip pos="1" side="tl" part="whole"/>
+            </lu>
+          </chunk>
+        </out>
+      </action>
+    </rule> 
+
+
+    <rule comment="PROPER_NOUN">
+      <pattern>
+        <pattern-item n="prop_nom"/>
+	  </pattern>
+	  <action>
+          <choose>
+            <when>
+              <test>
+                <equal>
+                  <clip pos="1" side="sl" part="n_type"/>
+                  <lit-tag v="nom"/>
+                </equal>
+              </test>
+            </when>
+          <when>
+            <test>
+              <equal>
+                <clip pos="1" side="sl" part="n_type"/>
+                <lit-tag v="gen"/>
+              </equal>
+
+              <let>
+                <clip pos="1" side="sl" part="n_type"/>
+                <lit-tag v="nom"/>
+              </let>
+                <out>
+                  <lu>
+                    <clip pos="1" side="tl" part="whole"/>
+                  </lu>
+                  <b/>
+                  <lu>
+                    <lit v="की"/>
+                  </lu>
+                </out>
+            </test>
+          </when>
+          <when>
+            <test>
+              <equal>
+                <clip pos="1" side="sl" part="n_type"/>
+                <lit-tag v="obj"/>
+              </equal>
+              <let>
+                <clip pos="1" side="sl" part="n_type"/>
+                <lit-tag v="nom"/>
+              </let>
+                <out>
+                  <lu>
+                    <clip pos="1"  side="tl" part="whole"/>
+                  </lu>
+                </out>
+     
+            </test>
+          </when>
+          </choose>
+      </action>
+
+    </rule>
+
+
+
+  </section-rules>
+</transfer>
