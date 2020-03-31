@@ -35,6 +35,9 @@
     <def-cat n="pcnd">
       <cat-item tags="vblex.pcnd"/>
     </def-cat>
+    <def-cat n="inf">
+      <cat-item tags="vblex.inf"/>
+    </def-cat>
     <def-cat n="past">
       <cat-item tags="vblex.past"/>
     </def-cat>
@@ -76,6 +79,7 @@
     <def-attr n="a_n">
       <attr-item tags="n"/>
       <attr-item tags="np.ant"/>
+      <attr-item tags="np.top"/>
     </def-attr>
 
     <def-attr n="case">
@@ -483,6 +487,43 @@
   </section-def-macros>
 
   <section-rules>
+    <rule comment="ADJ NOUN">
+        <pattern>
+          <pattern-item n="adj" />
+          <pattern-item n="nom"/>
+        </pattern>
+        <action>
+          <call-macro n="adj_init">
+                  <with-param pos="1" />
+              </call-macro>
+          <out>
+            <chunk name="adj_noun">
+              <tags>
+                <tag><clip pos="2" side="tl" part="gen"/></tag>
+                <tag><clip pos="2" side="tl" part="nbr"/></tag>
+              </tags>
+
+              <lu>
+                <clip pos="1" side="tl" part="lem"/>
+                <clip pos="1" side="tl" part="a_adj"/>
+                <clip pos="2" side="tl" part="gen"/>
+                <clip pos="2" side="tl" part="nbr"/>
+                <var n="casevar"/>
+              </lu>
+              <b/>
+            
+              <lu>
+                <clip pos="2" side="tl" part="lem"/>
+                <clip pos="2" side="tl" part="a_n"/>
+                <clip pos="2" side="tl" part="gen"/>
+                <clip pos="2" side="tl" part="nbr"/>
+                <clip pos="2" side="tl" part="case"/>
+              </lu>
+            </chunk>
+          </out>
+        </action>
+      </rule>
+
     <rule comment="REGLA: ADJ">
       <pattern>
         <pattern-item n="adj" />
@@ -613,9 +654,72 @@
     </rule>
 
 
+
+    <rule comment="REGLA: VBLEX ">
+      <pattern>
+              <pattern-item n="inf"/>
+      </pattern>
+      <action>
+              <call-macro n="verb_init">
+                  <with-param pos="1" />
+              </call-macro>
+        <out>
+          <chunk name="verbinf" case="caseFirstWord">
+            <tags>
+              <tag><lit-tag v="VP inf"/></tag>
+              <tag><var n="genvar"/></tag>
+              <tag><var n="nbrvar"/></tag>
+            </tags>
+
+            <lu>
+              <clip pos="1" side="tl" part="lem"/>
+              <clip pos="1" side="tl" part="a_verb"/>
+              <lit-tag v="tv"/>
+              <lit-tag v="inf"/>
+              <lit-tag v="nom"/>
+              <var n="genvar"/>
+                            <!-- <clip pos="1" side="tl" part="persvar"/> -->
+            </lu>
+          </chunk>
+        </out>
+      </action>
+    </rule>
+
     <rule comment="REGLA: VBLEX ">
       <pattern>
         <pattern-item n="vblex"/>
+      </pattern>
+      <action>
+              <call-macro n="verb_init">
+                  <with-param pos="1" />
+              </call-macro>
+        <out>
+          <chunk name="verb" case="caseFirstWord">
+            <tags>
+              <tag><lit-tag v="VP past"/></tag>
+              <tag><var n="genvar"/></tag>
+              <tag><var n="nbrvar"/></tag>
+            </tags>
+
+            <lu>
+              <clip pos="1" side="tl" part="lem"/>
+              <clip pos="1" side="tl" part="a_verb"/>
+              <var n="tvvar"/>
+              <lit-tag v="past"/>
+              <clip pos="1" side="tl" part="a_cntverb"/>
+              <var n= "persvar"/>
+              <var n="genvar"/>
+              <var n="nbrvar"/>
+             <clip pos="1" side="tl" part="persvar"/> 
+            </lu>
+          </chunk>
+        </out>
+      </action>
+    </rule>
+
+  <rule comment="REGLA: VBLEX ">
+      <pattern>
+        <pattern-item n="past"/>
       </pattern>
       <action>
               <call-macro n="verb_init">
@@ -644,6 +748,7 @@
         </out>
       </action>
     </rule>
+
    <!--  <rule comment="REGLA: VBLEX ppst">
       <pattern>
         <pattern-item n="ppst"/>

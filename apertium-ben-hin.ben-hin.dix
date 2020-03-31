@@ -126,7 +126,7 @@
       <e><p><l>সর্বদা<s n="adv"/></l><r>हमेशा<s n="adv"/></r></p></e>
       <e><p><l>সুন্দর<s n="adj"/></l><r>अच्छा<s n="adj"/></r></p></e> 
       <e><p><l>গরম<s n="adj"/></l><r>गर्म<s n="adj"/></r></p></e> 
-      <e><p><l>ঠান্ডা<s n="adj"/></l><r>ठंडा<s n="adj"/></r></p></e>
+      <e><p><l>ঠান্ডা<s n="adj"/><s n="sint"/></l><r>ठंडा<s n="adj"/></r></p></e>
       <e><p><l>বড়<s n="adj"/></l><r>बड़ा<s n="adj"/></r></p></e>
       <e><p><l>ছোট<s n="adj"/></l><r>छोटा<s n="adj"/></r></p></e>
       <e><p><l>ছোট<s n="adj"/></l><r>छोटी<s n="adj"/></r></p></e>
@@ -201,7 +201,10 @@
       <!-- SECTION: Nouns -->
 
     <!-- negation markers are missing in bengali-->
-      <e><p><l>সময়<s n="n"/><s n="mf"/><s n="nn"/></l><r>समय<s n="n"/><s n="m"/></r></p></e>
+
+
+    <e><p><l>ভারত<s n="np" /><s n="top" /><s n="mf" /><s n="sg" /><s n="nom" /></l><r>भारत<s n="np"/><s n="top"/><s n="sg"/></r></p></e>
+    <e><p><l>সময়<s n="n"/><s n="mf"/><s n="nn"/></l><r>समय<s n="n"/><s n="m"/></r></p></e>
     <e><p><l>বয়স<s n="n"/><s n="mf"/><s n="nn"/></l><r>उम्र<s n="n"/><s n="f"/></r></p></e>
     <e><p><l>মা<s n="n"/><s n="f"/><s n="hu"/></l><r>मां<s n="n"/><s n="f"/></r></p></e>
     <e><p><l>বছর<s n="n"/><s n="nt"/><s n="nn"/></l><r>साल<s n="n"/><s n="m"/></r></p></e>

@@ -46,6 +46,10 @@
 
   <section-def-attrs>
 
+    <def-attr n="sint">
+      <attr-item tags="sint"/>
+    </def-attr>
+
     <def-attr n="a_adj">
       <attr-item tags="adj"/>
       <attr-item tags="adj.pos"/>
@@ -75,6 +79,7 @@
     <def-attr n="a_n">
       <attr-item tags="n"/>
       <attr-item tags="np.ant"/>
+      <attr-item tags="np.top"/>
     </def-attr>
 
     <def-attr n="case">
@@ -483,26 +488,68 @@
 
   <section-rules>
 
-    <rule comment = "NOM">
+     <rule comment="REGLA: ADJ">
       <pattern>
-        <pattern-item n ="nom"/>
+        <pattern-item n="adj" />
       </pattern>
       <action>
-              <call-macro n="noun_init">
+              <call-macro n="adj_init">
                   <with-param pos="1" />
               </call-macro>
         <out>
-          <chunk name="nouns" case="caseFirstWord">
+          <chunk name="adj">
             <tags>
-                <tag><lit-tag v="SN"/></tag>
-            </tags>
-            <lu>
-              <clip pos="1" side="tl" part="whole"/>
-            </lu>
+              <tag><clip pos="1" side="tl" part="gen"/></tag>
+              <tag><clip pos="1" side="tl" part="nbr"/></tag>
+             </tags>
+          
+          <lu>
+            <clip pos="1" side="tl" part="lem"/>
+            <clip pos="1" side="tl" part="a_adj"/>
+            <clip pos="1" side="tl" part="sint"/>
+            <lit-tag v="mf"/>
+          </lu>
+
           </chunk>
         </out>
       </action>
     </rule>
+
+   <!--  <rule comment="REGLA: NOM">
+      <pattern>
+        <pattern-item n="nom" />
+      </pattern>
+      <action>
+        
+        <out>
+          <chunk name="nom">
+            <tags>
+              <tag><lit-tag v="SN"/></tag>
+              <tag><clip pos="1" side="tl" part="gen"/></tag>
+              <tag><clip pos="1" side="tl" part="nbr"/></tag>
+             </tags>
+            <lu>
+                <clip pos="1" side="tl" part="lem"/>
+                <clip pos="1" side="tl" part="a_n"/>
+                <clip pos="1" side="tl" part="gen"/>
+                <clip pos="1" side="tl" part="nbr"/>
+                <clip pos="1" side="tl" part="case"/>
+            </lu>
+          </chunk>
+        </out>
+
+      </action>
+    </rule> -->
+<!-- 
+    <rule comment = "Vblex">
+      <pattern>
+        <pattern-item n="vblex"/>
+      </pattern>
+      <action>
+
+      </action>
+
+    </rule> -->
 
 
     <rule comment="REGLA: SENT">
