@@ -4,6 +4,9 @@
     <def-cat n="nom">
       <cat-item tags="n.*"/>
     </def-cat>
+    <def-cat n="prop_nom">
+      <cat-item tags="np.*"/>
+    </def-cat>
     <def-cat n="sent">
       <cat-item tags="sent"/>
     </def-cat>
@@ -20,7 +23,14 @@
     <def-attr n="gen">
       <attr-item tags="m"/>
       <attr-item tags="f"/>
+      <attr-item tags="nn"/>
       <attr-item tags="GD"/>
+    </def-attr>
+    <def-attr n="n_type">
+      <attr-item tags="nom"/>
+      <attr-item tags="gen"/>
+      <attr-item tags="obj"/>
+      <attr-item tags="loc"/>
     </def-attr>
 
   </section-def-attrs>
@@ -35,15 +45,6 @@
             <var n="number"/>
             <lit v=""/>
           </let>
-    </def-macro>
-
-    <def-macro n="f_concord2" npar="2">
-      <choose>
-        <when>
-          <test><not><equal><clip pos="1" side="tl" part="gen"/><lit v=""/></equal></not></test>
-          <let><clip pos="2" side="tl" part="gen"/><clip pos="1" side="tl" part="gen"/></let>
-        </when>
-      </choose>
     </def-macro>
   </section-def-macros>
 
@@ -66,26 +67,71 @@
       </action>
     </rule>
 
-    <rule>
-      <pattern>
-        <pattern-item n="gen-post"/>
-        <pattern-item n="nom"/>
+    <rule comment="PROPER_NOUN">
+      <pattern >
+        <pattern-item n="nom">
+          <choose>
+            <when>
+              <test>
+                <equal>
+                  <clip pos="1" side="sl" part="n_type"/>
+                  <lit-tag v="nom"/>
+                  <action>
+                    <out>
+                      <lu>
+                        <clip pos="1" side="tl" part="whole"/>
+                      </lu>
+                    </out>
+                  </action>
+                </equal>
+              </test>
+            </when>
+          <when>
+            <test>
+              <equal>
+                <clip pos="1" side="sl" part="n_type"/>
+                <lit-tag v="gen"/>
+              </equal>
+              <let>
+                <clip pos="1" side="sl" part="n_type"/>
+                <lit-tag v="nom"/>
+              </let>
+              <action>
+                <out>
+                  <lu>
+                    <clip pos="1" side="tl" part="whole"/>
+                  </lu>
+                  <b/>
+                  <lu>
+                    <lit v="की"/>
+                  </lu>
+                </out>
+              </action>
+            </test>
+          </when>
+          <when>
+            <test>
+              <equal>
+                <clip pos="1" side="sl" part="n_type"/>
+                <lit-tag v="obj"/>
+              </equal>
+              <let>
+                <clip pos="1" side="tl" part="n_type"/>
+                <lit-tag v="nom"/>
+              </let>
+              <action>
+                <out>
+                  <lu>
+                    <clip pos="1" part="whole"/>
+                  </lu>
+                </out>
+              </action>
+            </test>
+          </when>
+          </choose>
+        </pattern-item>
       </pattern>
-      <action>
-        <call-macro n="f_concord2">
-          <with-param pos="2"/>
-          <with-param pos="1"/>
-        </call-macro>
-        <out>
-          <lu>
-            <clip pos="1" side="tl" part="whole"/>
-          </lu>
-          <b pos="1"/>
-          <lu>
-            <clip pos="2" side="tl" part="whole"/>
-          </lu>
-        </out>
-      </action>
+
     </rule>
   </section-rules>
 </transfer>
