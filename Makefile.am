@@ -1,89 +1,206 @@
 ###############################################################################
-## Makefile for apertium-ben
+## Makefile for Bengali--Hindi
 ###############################################################################
 
-RELEASE=0.1
 VERSION=0.1.0
 LANG1=ben
-BASENAME=apertium-$(LANG1)
+LANG2=hin
+PREFIX1=$(LANG1)-$(LANG2)
+PREFIX2=$(LANG2)-$(LANG1)
 
-TARGETS_COMMON =			\
-	$(LANG1).automorf.bin		\
-	$(LANG1).automorf.att.gz	\
-	$(LANG1).autogen.bin		\
-	$(LANG1).autogen.att.gz		\
-	$(LANG1).autopgen.bin		\
-	$(LANG1).rlx.bin
+BASENAME=apertium-$(PREFIX1)
+
+TARGETS_COMMON =		\
+	$(PREFIX1).automorf.bin	\
+	$(PREFIX1).prob		\
+	$(PREFIX1).rlx.bin	\
+	$(PREFIX1).autobil.bin	\
+	$(PREFIX1).autolex.bin	\
+	$(PREFIX1).autogen.bin	\
+	$(PREFIX1).autopgen.bin	\
+	$(PREFIX1).t1x.bin	\
+	$(PREFIX1).t2x.bin	\
+	$(PREFIX1).t3x.bin	\
+	$(PREFIX2).automorf.bin	\
+	$(PREFIX2).prob		\
+	$(PREFIX2).rlx.bin	\
+	$(PREFIX2).autobil.bin	\
+	$(PREFIX2).autolex.bin	\
+	$(PREFIX2).autogen.bin	\
+	$(PREFIX2).autopgen.bin	\
+	$(PREFIX2).t1x.bin	\
+	$(PREFIX2).t2x.bin	\
+	$(PREFIX2).t3x.bin
 
 # This include defines goals for install-modes, .deps/.d, autobil.prefixes and .mode files:
 @ap_include@
 
 ###############################################################################
-## Bengali transducer
+## Monolingual transducers
 ###############################################################################
 
-$(LANG1).autogen.bin: $(BASENAME).$(LANG1).dix .deps/.d
-	apertium-validate-dictionary $<
-	lt-comp rl $< $@ $(BASENAME).$(LANG1).acx
+# -------------------
+# Bengali analysis:
+# -------------------
 
-$(LANG1).automorf.bin: $(BASENAME).$(LANG1).dix
-	apertium-validate-dictionary $<
-	lt-comp lr $< $@ $(BASENAME).$(LANG1).acx
+.deps/$(LANG1).automorf.bin: $(AP_SRC1)/$(LANG1).automorf.bin .deps/.d
+	cp $< $@
 
-$(LANG1).autogen.att.gz: $(LANG1).autogen.bin
-	lt-print $< | gzip -9 -c -n > $@
+$(PREFIX1).automorf.bin: .deps/$(LANG1).automorf.bin $(PREFIX1).autobil.bin
+	lt-trim $^ $@
 
-$(LANG1).automorf.att.gz: $(LANG1).automorf.bin
-	lt-print $< | gzip -9 -c -n > $@
+# -------------------
+# Bengali generation:
+# ---------------------
 
-$(LANG1).autopgen.bin: $(BASENAME).post-$(LANG1).dix
-	lt-comp lr $< $@
+
+$(PREFIX2).autogen.bin: $(AP_SRC1)/$(LANG1).autogen.bin
+	cp $< $@
+
+# -------------------
+# Hindi analysis:
+# -------------------
+
+.deps/$(LANG2).automorf.bin: $(AP_SRC2)/$(LANG2).automorf.bin .deps/.d
+	cp $< $@
+
+$(PREFIX2).automorf.bin: .deps/$(LANG2).automorf.bin $(PREFIX2).autobil.bin
+	lt-trim $^ $@
+
+# -------------------
+# Hindi generation:
+# ---------------------
+
+
+$(PREFIX1).autogen.bin: $(AP_SRC2)/$(LANG2).autogen.bin
+	cp $< $@
+
+###############################################################################
+## Tagger models
+###############################################################################
+
+$(PREFIX1).prob: $(AP_SRC1)/$(LANG1).prob
+	cp $< $@
+
+$(PREFIX2).prob: $(AP_SRC2)/$(LANG2).prob
+	cp $< $@
 
 ###############################################################################
 ## Disambiguation rules
 ###############################################################################
 
-$(LANG1).rlx.bin: $(BASENAME).$(LANG1).rlx $(CGCOMP)
-	$(CGCOMP) $< $@
+$(PREFIX1).rlx.bin: $(AP_SRC1)/apertium-$(LANG1).$(LANG1).rlx
+	cg-comp $< $@
+
+$(PREFIX2).rlx.bin: $(AP_SRC2)/apertium-$(LANG2).$(LANG2).rlx
+	cg-comp $< $@
+
+###############################################################################
+## Bilingual dictionaries
+###############################################################################
+
+$(PREFIX1).autobil.bin: $(BASENAME).$(PREFIX1).dix
+	apertium-validate-dictionary $<
+	lt-comp lr $< $@
+
+$(PREFIX2).autobil.bin: $(BASENAME).$(PREFIX1).dix
+	apertium-validate-dictionary $<
+	lt-comp rl $< $@
+
+###############################################################################
+## Lexical selection rules
+###############################################################################
+
+$(PREFIX1).autolex.bin: $(BASENAME).$(PREFIX1).lrx
+	lrx-comp $< $@
+
+$(PREFIX2).autolex.bin: $(BASENAME).$(PREFIX2).lrx
+	lrx-comp $< $@
+
+
+###############################################################################
+## Structural transfer rules
+###############################################################################
+
+
+$(PREFIX1).t1x.bin: $(BASENAME).$(PREFIX1).t1x
+	apertium-validate-transfer $<
+	apertium-preprocess-transfer $< $@
+
+$(PREFIX1).t2x.bin: $(BASENAME).$(PREFIX1).t2x
+	apertium-validate-interchunk $<
+	apertium-preprocess-transfer $< $@
+
+$(PREFIX1).t3x.bin: $(BASENAME).$(PREFIX1).t3x
+	apertium-validate-postchunk $<
+	apertium-preprocess-transfer $< $@
+
+
+$(PREFIX2).t1x.bin: $(BASENAME).$(PREFIX2).t1x
+	apertium-validate-transfer $<
+	apertium-preprocess-transfer $< $@
+
+$(PREFIX2).t2x.bin: $(BASENAME).$(PREFIX2).t2x
+	apertium-validate-interchunk $<
+	apertium-preprocess-transfer $< $@
+
+$(PREFIX2).t3x.bin: $(BASENAME).$(PREFIX2).t3x
+	apertium-validate-postchunk $<
+	apertium-preprocess-transfer $< $@
+
+###############################################################################
+## Postgeneration dictionaries
+###############################################################################
+
+$(PREFIX1).autopgen.bin: $(AP_SRC2)/$(LANG2).autopgen.bin
+	cp $< $@
+
+$(PREFIX2).autopgen.bin: $(AP_SRC1)/$(LANG1).autopgen.bin
+	cp $< $@
 
 ###############################################################################
 ## Distribution
 ###############################################################################
-EXTRA_DIST=$(BASENAME).$(LANG1).dix		\
-		$(BASENAME).$(LANG1).acx	\
-		$(BASENAME).$(LANG1).rlx	\
-		$(BASENAME).post-$(LANG1).dix	\
-		$(LANG1).prob			\
+
+EXTRA_DIST=					\
+		$(BASENAME).$(PREFIX1).lrx	\
+		$(BASENAME).$(PREFIX1).dix	\
+		$(BASENAME).$(PREFIX2).lrx	\
+		$(BASENAME).$(PREFIX1).t1x	\
+		$(BASENAME).$(PREFIX1).t2x	\
+		$(BASENAME).$(PREFIX1).t3x	\
+		$(BASENAME).$(PREFIX2).t1x	\
+		$(BASENAME).$(PREFIX2).t2x	\
+		$(BASENAME).$(PREFIX2).t3x	\
 		modes.xml
 
 ###############################################################################
-## Installation stuff
+## Installation
 ###############################################################################
-#
-#   apertium_ben_dir: This is where the compiled binaries go
-#   apertium_ben_srcdir: This is where the source files go
 
-apertium_bendir=$(prefix)/share/apertium/$(BASENAME)/
-apertium_ben_srcdir=$(prefix)/share/apertium/$(BASENAME)/
+apertium_ben_hindir=$(prefix)/share/apertium/$(BASENAME)/
 
-apertium_ben_DATA=$(TARGETS_COMMON) $(LANG1).prob
+# Files which should be installed to $(prefix)/share/apertium/$(BASENAME)/:
+apertium_ben_hin_DATA=	\
+	$(TARGETS_COMMON)				\
+	$(BASENAME).$(PREFIX1).t1x			\
+	$(BASENAME).$(PREFIX1).t2x			\
+	$(BASENAME).$(PREFIX1).t3x			\
+	$(BASENAME).$(PREFIX2).t1x			\
+	$(BASENAME).$(PREFIX2).t2x			\
+	$(BASENAME).$(PREFIX2).t3x
 
-pkgconfigdir = $(prefix)/share/pkgconfig
-pkgconfig_DATA = $(BASENAME).pc
 
-# Modes are not installed since they're all just "debug modes". All
-# modes are created by this goal.
-modes/$(LANG1)-morph.mode: modes.xml
-	apertium-validate-modes modes.xml
-	apertium-gen-modes modes.xml
-
-noinst_DATA=modes/$(LANG1)-morph.mode
+# All modes are created by the same goal, listing several will just give problems with make -j2
+noinst_DATA=modes/$(PREFIX1).mode \
+	.deps/$(LANG1).automorf.bin \
+	.deps/$(LANG2).automorf.bin
 
 install-data-local: install-modes
-	test -d $(DESTDIR)$(apertium_ben_srcdir) || mkdir -p $(DESTDIR)$(apertium_ben_srcdir)
-	$(INSTALL_DATA) $(BASENAME).$(LANG1).dix $(DESTDIR)$(apertium_ben_srcdir)
-	$(INSTALL_DATA) $(BASENAME).$(LANG1).rlx $(DESTDIR)$(apertium_ben_srcdir)
-	$(INSTALL_DATA) $(BASENAME).post-$(LANG1).dix $(DESTDIR)$(apertium_ben_srcdir)
+
+###############################################################################
+## Cleanup
+###############################################################################
 
 CLEANFILES = $(TARGETS_COMMON)
 clean-local:
@@ -94,8 +211,11 @@ clean-local:
 ###############################################################################
 
 test: all
-	echo "TODO test sentence" | apertium -d . ben-morph | tee .test-mt
-	@echo "TODO test analysis results" > .test-ref
+	echo "house" | apertium -d . ben-hin | tee .test-mt
+	@echo "house" > .test-ref
+	@diff .test-ref .test-mt
+	echo "house" | apertium -d . hin-ben | tee .test-mt
+	@echo "house" > .test-ref
 	@diff .test-ref .test-mt
 	@rm .test-ref .test-mt
 
