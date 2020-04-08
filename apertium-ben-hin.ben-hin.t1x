@@ -56,7 +56,7 @@
     <def-attr n="a_adj">
       <attr-item tags="adj"/>
       <attr-item tags="adj.pos"/>
-    </def-attr>r>
+    </def-attr>
     <def-attr n="a_cntverb">
       <attr-item tags="cnt"/>
     </def-attr>
@@ -486,7 +486,7 @@
         </action>
       </rule>
 
-    <rule comment="Adjectives">
+    <rule comment="REGLA: ADJ">
       <pattern>
         <pattern-item n="adj" />
       </pattern>
@@ -513,7 +513,7 @@
       </action>
     </rule>
 
-    <rule comment="Nouns">
+    <rule comment="REGLA: NOM">
       <pattern>
         <pattern-item n="nom" />
       </pattern>
@@ -678,7 +678,7 @@
       </action>
     </rule>
 
-  <rule comment="Verbs">
+  <rule comment="REGLA: VBLEX ">
       <pattern>
         <pattern-item n="past"/>
       </pattern>
@@ -703,6 +703,7 @@
               <var n= "persvar"/>
               <var n="genvar"/>
               <var n="nbrvar"/>
+              <!-- <clip pos="1" side="tl" part="persvar"/> -->
             </lu>
           </chunk>
         </out>
